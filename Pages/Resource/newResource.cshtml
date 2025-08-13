@@ -1,0 +1,143 @@
+﻿@page "{id?}"
+@model ApiForTest.Pages.Resource.AddItemsModel
+@{
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ресурсы</title>
+    <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body>
+    <div class="navigation">
+        <h1><a class="aLinkMain" href="/">Склад</a></h1>
+
+        <div class="btn-group">
+            <a class="aLink btn" href="/Receipts/Receipts">Поступления</a>
+        </div>
+
+        <h1>Справочники</h1>
+
+        <div class="btn-group">
+            <a class="aLink btn" href="/Unit/Unit">Еденицы измерения</a>
+            <a class="aLink btn" href="/Resource/Resource">Ресурсы</a>
+        </div>
+    </div>
+    <div class="main">
+        <h1 style="color: black;">Новый ресурс</h1>
+
+        <div class="newItem">
+            <input id="nwItem" type="text" />
+            <button id="saveBtn">Сохранить</button>
+        </div>
+
+        <div class="additionalFunc">
+            <button id="updateBtn" onclick="updateFunc()">Сохранить</button>
+            <button id="deleteBtn" onclick="deleteFunc()">Удалить</button>
+            <button id="archiveBtn" onclick="archiveFunc()">В архив</button>
+        </div>
+    </div>
+
+        <script>
+            async function updateFunc(){
+                const result = document.getElementById("nwItem").value;
+
+                const response = await fetch(`/api/Resource/updateResources/${@Model.Id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({name: result})
+                });
+
+                if (!response.ok) {
+                    alert("Ошибка");
+                    return;
+                }
+                window.location.href = '/Resource/Resource';
+            }
+        </script>
+        <script>
+            async function deleteFunc() {
+                const response = await fetch(`/api/Resource/${@Model.Id}`,{
+                    method: 'DELETE'
+                });
+
+                if(!response.ok){
+                    alert("Такого нет");
+                    return;
+                }
+                window.location.href = '/Resource/Resource';
+            }
+        </script>
+        <script>
+            async function archiveFunc() {
+                const response = await fetch(`/api/Resource/archiveResources/${@Model.Id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ state: true })
+                });
+
+                if (!response.ok) {
+                    alert("Ошибка");
+                    return;
+                }
+                window.location.href = '/Resource/Resource';
+            }
+        </script>
+        <script>
+            async function getId() {
+                const Id = "@Model.Id";
+                
+                if (Id) {
+                    const selectInput = document.querySelector("#nwItem");
+                    selectInput.style.width = '330px';
+                    const selectSaveBtn = document.querySelector("#saveBtn");
+                    selectSaveBtn.style.display = 'none';
+
+                    const response = await fetch(`/api/Resource/${Id}`);
+                    const data = await response.json();
+                    const selector = document.querySelector("#nwItem");
+                    selector.value = data.name;
+                    }
+                else{
+                    const selectUpdateBtn = document.querySelector("#updateBtn");
+                    selectUpdateBtn.style.display = 'none';
+                    
+                    const selectDeleteBtn = document.querySelector("#deleteBtn");
+                    selectDeleteBtn.style.display = 'none';
+
+                    const selectArchiveBtn = document.querySelector("#archiveBtn");
+                    selectArchiveBtn.style.display = 'none';
+                }
+            }
+            getId();
+        </script>
+        <script>
+            document.getElementById('saveBtn').addEventListener('click', async () => {
+                const value = document.getElementById('nwItem').value.trim();
+
+                if (!value) {
+                    alert('Введите значение');
+                    return;
+                }
+
+                const response = await fetch("/api/Resource", {
+                    method: 'Post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name: value })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Ошибка при отправке данных');
+                }
+
+                window.location.href = '/Resource/Resource';
+            });
+        </script>
+</body>
+</html>

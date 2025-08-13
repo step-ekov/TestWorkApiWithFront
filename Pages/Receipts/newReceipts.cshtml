@@ -1,0 +1,181 @@
+﻿@page
+@model ApiForTest.Pages.Receipts.newReceiptsModel
+@{
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ресурсы</title>
+    <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body>
+    <div class="navigation">
+        <h1><a class="aLinkMain" href="/">Склад</a></h1>
+
+        <div class="btn-group">
+            <a class="aLink btn" href="/Receipts/Receipts">Поступления</a>
+        </div>
+
+        <h1>Справочники</h1>
+
+        <div class="btn-group">
+            <a class="aLink btn" href="/Unit/Unit">Еденицы измерения</a>
+            <a class="aLink btn" href="/Resource/Resource">Ресурсы</a>
+        </div>
+    </div>
+    <div class="main">
+        <h1 style="color: black;">Новое поступление</h1>
+
+
+        <button id="saveBtn">Сохранить</button>
+        <div class="newReceiptsDoc">
+            <div>
+                <p>Номер</p>
+                <input id="nwNumber" type="text" style="height: 20px; margin-left: 10px" />
+            </div>
+            <div>
+                <p>Дата</p>
+                <input id="nwData" type="text" style="height: 20px; margin-left: 24px"/>
+            </div>
+        </div>
+        <div class="newCategory">
+            <div>
+                <button class="openBtn" id="addCategory" onclick="openCategory()">+</button>
+            </div>
+            <div class="categoryR" style="visibility: hidden;">
+                <label for="category" style="font-size: 16px; color: black;">Ресурс</label>
+                <select id="newCategoryResource" name="category">
+                    <option value="Все">Все</option>
+                </select>
+            </div>
+            <div class="categoryU" style="visibility: hidden;">
+                <label for="category" style="font-size: 16px; color: black;">Еденица поступления</label>
+                <select id="newCategoryUnit" name="category">
+                    <option value="Все">Все</option>
+                </select>
+            </div>
+            <div class="categoryC" style="visibility: hidden;">
+                <label for="category" style="font-size: 16px; color: black;">Количество</label>
+                <input id="newCount" type="text" />
+            </div>
+            <div class="closedBtn" style="visibility: hidden;">
+                <button id="deleteCategory" onclick="closedCategory()">-</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function openCategory() {
+            getItem();
+
+            const categoryR = document.querySelector('.categoryR');
+            categoryR.style.visibility = 'visible';
+
+            const categoryU = document.querySelector('.categoryU');
+            categoryU.style.visibility = 'visible';
+
+            const categoryC = document.querySelector('.categoryC');
+            categoryC.style.visibility = 'visible';
+
+            const btnClosed = document.querySelector('.closedBtn');
+            btnClosed.style.visibility = 'visible';
+        }
+    </script>
+    <script>
+        async function closedCategory() {
+            const categoryR = document.querySelector('.categoryR');
+            categoryR.style.visibility = 'hidden';
+
+            const categoryU = document.querySelector('.categoryU');
+            categoryU.style.visibility = 'hidden';
+
+            const categoryC = document.querySelector('.categoryC');
+            categoryC.style.visibility = 'hidden';
+
+            const btnClosed = document.querySelector('.closedBtn');
+            btnClosed.style.visibility = 'hidden';
+        }
+    </script>
+
+    <script>
+        async function getItem(){
+            const responseR = await fetch("/api/Resource");
+            const dataR = await responseR.json();
+            const selectorR = document.querySelector("#newCategoryResource");
+            
+            dataR.forEach(itemR => {
+                resource = Array.from(selectorR.options)
+                    .some(option => option.textContent === itemR.name);
+
+                if (!resource) {
+                    const rowR = document.createElement('option');
+                    rowR.textContent = itemR.name;
+                    selectorR.appendChild(rowR);
+                }
+            });
+
+            const responseU = await fetch("/api/Unit");
+            const dataU = await responseU.json();
+            const selectorU = document.querySelector("#newCategoryUnit");
+            dataU.forEach(itemU => {
+                const unit = Array.from(selectorU.options)
+                    .some(option => option.textContent === itemU.name);
+
+                if (!unit) {
+                    const rowU = document.createElement('option');
+                    rowU.textContent = itemU.name;
+                    selectorU.appendChild(rowU);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*         <script>
+            document.getElementById('saveBtn').addEventListener('click', async () => {
+                const value = document.getElementById('nwItem').value.trim();
+
+                if (!value) {
+                    alert('Введите значение');
+                    return;
+                }
+
+                const response = await fetch("/api/Resource", {
+                    method: 'Post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name: value })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Ошибка при отправке данных');
+                }
+
+                window.location.href = '/Resource/Resource';
+            });
+        </script> *@

@@ -1,0 +1,56 @@
+﻿@page
+@model ApiForTest.Pages.Unit.ArchiveUnitModel
+@{
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ресурсы</title>
+    <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body>
+    <div class="navigation">
+        <h1><a class="aLinkMain" href="/">Склад</a></h1>
+        <div class="btn-group">
+            <a class="aLink btn" href="/Receipts/Receipts">Поступления</a>
+        </div>
+        <h1>Справочники</h1>
+        <div class="btn-group">
+            <a class="aLink btn" href="/Unit/Unit">Еденицы измерения</a>
+            <a class="aLink btn" href="/Resource/Resource">Ресурсы</a>
+        </div>
+    </div>
+
+    <div class="main">
+        <h1 style="color: black;">Справочник едениц измерения</h1>
+        <div>
+            <button onclick="window.location.href='/Unit/Unit'">Из архива</button>
+        </div>
+
+        <table id="MainTb">
+            <thead>
+                <tr>
+                    <th>Наименование</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        async function getData() {
+            const response = await fetch("/api/Unit/archive");
+            const data = await response.json();
+            const tbody = document.querySelector("#MainTb tbody");
+            tbody.innerHTML = '';
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${item.name}</td>`;
+                tbody.appendChild(row);
+            });
+        }
+        getData();
+    </script>
+</body>
+</html>

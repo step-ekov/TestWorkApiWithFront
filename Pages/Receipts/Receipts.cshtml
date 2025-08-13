@@ -1,0 +1,151 @@
+﻿@page
+@model ApiForTest.Pages.Receipts.ReceiptsModel
+@{
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ресурсы</title>
+    <link rel="stylesheet" href="/css/site.css"/>
+</head>
+<body>
+    <div class="navigation">
+        <h1><a class="aLinkMain" href="/">Склад</a></h1>
+
+        <div class="btn-group">
+            <a class="aLink btn" href="/Receipts/Receipts">Поступления</a>
+        </div>
+
+        <h1>Справочники</h1>
+
+        <div class="btn-group">
+            <a class="aLink btn" href="/Unit/Unit">Еденицы измерения</a>
+            <a class="aLink btn" href="/Resource/Resource">Ресурсы</a>
+        </div>
+    </div>
+    <div class="main">
+        <h1 style="color: black;">Поступления</h1>
+
+        <div class="allFilter">
+            <div class="filterReceipts">
+                <label for="category" style="font-size: 16px;">Номер поступления</label>
+                <select id="categoryNumber" name="category">
+                    <option value="Все">Все</option>
+                </select>
+            </div>
+
+            <div class="filterResource">
+                <label for="category" style="font-size: 16px;">Ресурс</label>
+                <select id="categoryResource" name="category">
+                    <option value="Все">Все</option>
+                </select>
+            </div>
+
+            <div class="filterUnit">
+                <label for="category" style="font-size: 16px;">Еденица измерения</label>
+                <select id="categoryUnit" name="category">
+                    <option value="Все">Все</option>
+                </select>
+            </div>
+        </div>
+
+        <div>
+            <button id="acceptFilter" onclick="clickFilter()">Применить</button>
+            <button onclick="window.location.href='/Receipts/newReceipts'">Добавить</button>
+        </div>
+
+        <table id="MainTb">
+            <thead>
+                <tr>
+                    <th>Номер</th>
+                    <th>Дата</th>
+                    <th>Ресурс</th>
+                    <th>Еденица измерения</th>
+                    <th>Количество</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        async function getData(api = "/api/ReceiptsResource") {
+            const response = await fetch(api);
+            const data = await response.json();
+            const tbody = document.querySelector("#MainTb tbody");
+            tbody.innerHTML = '';
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                            <td>${item.numberRDoc}</td>
+                            <td>${item.dateRDoc}</td>
+                            <td>${item.nameResource}</td>
+                            <td>${item.nameUnit}</td>
+                            <td>${item.countRResource}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            const selectorN = document.querySelector("#categoryNumber");
+            data.forEach(itemN => {
+                const number = Array.from(selectorN.options)
+                    .some(option => option.textContent === String(itemN.numberRDoc));
+                
+                if(!number){
+                    var rowN = document.createElement('option');
+                    rowN.textContent = itemN.numberRDoc;
+                    selectorN.appendChild(rowN);
+                }
+            });
+
+            const selectorR = document.querySelector("#categoryResource");
+            data.forEach(itemR => {
+                const resource = Array.from(selectorR.options)
+                    .some(option => option.textContent === itemR.nameResource);
+
+                if (!resource) {
+                    const rowR = document.createElement('option');
+                    rowR.textContent = itemR.nameResource;
+                    selectorR.appendChild(rowR);
+                }
+            });
+
+            const selectorU = document.querySelector("#categoryUnit");
+            data.forEach(itemU => {
+                const unit = Array.from(selectorU.options)
+                    .some(option => option.textContent === itemU.nameUnit);
+
+                if (!unit) {
+                    const rowU = document.createElement('option');
+                    rowU.textContent = itemU.nameUnit;
+                    selectorU.appendChild(rowU);
+                }
+            });
+        }
+        getData();
+    </script>
+
+    <script>
+        async function clickFilter() {
+            const selectorNumber = document.querySelector("#categoryNumber").value;
+            const selectorResource = document.querySelector("#categoryResource").value;
+            const selectorUnit = document.querySelector("#categoryUnit").value;
+
+            if (selectorNumber !== "Все") {
+                getData(api = `/api/ReceiptsResource/filterNumberReceipts?receiptsDocId=${selectorNumber}`);
+            }
+            if (selectorResource !== "Все") {
+                getData(api = `/api/ReceiptsResource/filterResource?resourceName=${selectorResource}`);
+            }
+            if (selectorUnit !== "Все") {
+                getData(api = `/api/ReceiptsResource/filterUnit?unitName=${selectorUnit}`);
+            }
+            if (selectorNumber === "Все" && selectorResource === "Все" && selectorUnit === "Все") {
+                getData(api = "/api/ReceiptsResource");
+            }
+        }
+    </script>
+</body>
+</html>

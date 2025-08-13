@@ -1,0 +1,175 @@
+﻿body {
+    font-family: Cambria, sans-serif;
+    background-color: #cccccc;
+    color: white;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.main {
+    margin-left: 270px;
+    padding: 20px;
+}
+
+.navigation {
+    position: fixed;
+    box-sizing: border-box;
+    width: 230px;
+    height: 100vh;
+    border: 2px solid #5386cc;
+    padding: 10px;
+    display: flex;
+    background-color: #5386cc;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.aLink {
+    display: block;
+    padding: 8px 12px;
+    background-color: #3333d0;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: 600;
+    user-select: none;
+    transition: background-color 0.3s ease;
+}
+
+.aLinkMain {
+    color: white;
+    text-decoration: none;
+}
+
+.aLink:hover {
+    background-color: #0056b3;
+}
+
+h1 {
+    color: white;
+}
+
+
+/*Resource Page*/
+table {
+    width: 1300px;
+    height: auto;
+    background-color: #b2b2b2;
+    margin-top: 20px;
+    flex-direction: column;
+    flex-wrap: wrap;
+    border-width: 1px;
+    border-style: solid;
+}
+th, td {
+    font-size: 18px;
+    color: black;
+    padding: 5px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #838383;
+}
+
+button {
+    width: 120px;
+    height: 30px;
+    transition: background-color 0.3s ease;
+}
+
+    button:hover {
+        background-color: #a9a9a9;
+    }
+
+/*Receipts Page*/
+.allFilter {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-bottom: 20px; 
+}
+
+    .allFilter label {
+        color: black;
+    }
+
+    .allFilter select {
+        width: 295px;
+        height: 25px;
+    }
+
+/*AddItems Page*/
+.newItem {
+    display: flex;
+    width: 350px;
+    gap: 5px;
+}
+
+.newItem button{
+    width: 105px;
+}
+
+.newItem input{
+    font-size: 16px;
+    height: 23px;
+    width: 220px;
+}
+
+.additionalFunc button{
+    margin-top: 10px;
+    width: 110px;
+}
+
+
+
+
+/*newReceipts Page*/
+.newReceiptsDoc div {
+    font-size: 18px;
+    color: black;
+    width: 600px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    align-items: baseline;
+}
+
+.newCategory {
+    margin-top: 10px;
+    font-size: 18px;
+    gap: 10px;
+    display: flex;
+}
+
+.newCategory select{
+    width: 150px;
+    height: 20px;
+}
+
+    .newCategory .openBtn {
+        color: white;
+        width: 30px;
+        height: 25px;
+        background-color: #0e8e04;
+        border-color: #0e8e04;
+        border-style: solid;
+        border-radius: 5%;
+    }
+
+    .newCategory .closedBtn button {
+        color: white;
+        width: 30px;
+        height: 25px;
+        background-color: #8e1904;
+        border-color: #8e1904;
+        border-style: solid;
+        border-radius: 5%;
+    }

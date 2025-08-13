@@ -1,0 +1,63 @@
+﻿@page
+@model ApiForTest.Pages.Unit.UnitModel
+@{
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Еденицы измерения</title>
+    <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body>
+    <div class="navigation">
+        <h1><a class="aLinkMain" href="/">Склад</a></h1>
+
+        <div class="btn-group">
+            <a class="aLink btn" href="/Receipts/Receipts">Поступления</a>
+        </div>
+
+        <h1>Справочники</h1>
+
+        <div class="btn-group">
+            <a class="aLink btn" href="/Unit/Unit">Еденицы измерения</a>
+            <a class="aLink btn" href="/Resource/Resource">Ресурсы</a>
+        </div>
+    </div>
+    <div class="main">
+        <h1 style="color: black;">Еденицы измерения</h1>
+        <div>
+            <button onclick="window.location.href='/Unit/newUnit'">Добавить</button>
+            <button onclick="window.location.href='/Unit/ArchiveUnit'">В архив</button>
+        </div>
+        <table id="MainTb">
+            <thead>
+                <tr>
+                    <th>Наименование</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        async function getData(){
+            const response = await fetch("/api/Unit");
+            const data = await response.json();
+            const tbody = document.querySelector("#MainTb tbody");
+            tbody.innerHTML = '';
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${item.name}</td>`;
+
+                row.addEventListener('click', () => {
+                    window.location.href = `/Unit/newUnit/${item.id}`;
+                });
+                tbody.appendChild(row);
+            });
+        }
+        getData();
+    </script>
+</body>
+</html>

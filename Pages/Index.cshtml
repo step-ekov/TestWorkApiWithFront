@@ -1,0 +1,31 @@
+﻿@page
+@model ApiForTest.Pages.IndexModel
+@{
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Склад</title>
+    <link rel="stylesheet" href="css/site.css" />
+   @*  <h1>@Model.Message</h1> *@
+</head>
+<body>
+    <div class="navigation">
+        <h1><a class="aLinkMain" href="/">Склад</a></h1>
+
+        <div class="btn-group">
+            <a class="aLink btn" href="/Receipts/Receipts">Поступления</a>
+        </div>
+
+        <h1>Справочники</h1>
+
+        <div class="btn-group">
+            <a class="aLink btn" href="/Unit/Unit">Еденицы измерения</a>
+            <a class="aLink btn" href="/Resource/Resource">Ресурсы</a>
+        </div>
+    </div>
+    <div class="main">
+        <h1 style="color: black;">Главная страница</h1>
+    </div>
+</body>
+</html>
