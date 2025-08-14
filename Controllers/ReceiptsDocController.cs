@@ -31,8 +31,8 @@ namespace ApiForTest.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(ReceiptsDoc receiptsDoc)
         {
-            await _receiptsDocServices.PostReceiptsDoc(receiptsDoc);
-            return Ok();
+            var id = await _receiptsDocServices.PostReceiptsDoc(receiptsDoc);
+            return Ok(new { id });
         }
 
         [HttpPut("updateUnit/{id}")]

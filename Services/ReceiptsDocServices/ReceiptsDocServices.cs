@@ -23,10 +23,11 @@ namespace ApiForTest.Services.ReceiptsDocServices
             return await _skladBd.ReceiptsDocDb.FirstOrDefaultAsync(r => r.Id == id);
         }
 
-        public async Task PostReceiptsDoc(ReceiptsDoc receiptsDoc)
+        public async Task<int> PostReceiptsDoc(ReceiptsDoc receiptsDoc)
         {
             await _skladBd.ReceiptsDocDb.AddAsync(receiptsDoc);
             await _skladBd.SaveChangesAsync();
+            return receiptsDoc.Id;
         }
 
         public async Task PutReceiptsDoc(int id, ReceiptsDoc receiptsDoc)

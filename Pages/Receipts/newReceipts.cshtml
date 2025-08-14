@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{id?}"
 @model ApiForTest.Pages.Receipts.newReceiptsModel
 @{
 }
@@ -27,15 +27,16 @@
         <h1 style="color: black;">Новое поступление</h1>
 
 
-        <button id="saveBtn">Сохранить</button>
+        <button id="saveBtn" onclick="addReceipts()">Сохранить</button>
+        <button id="deleteBtn" onclick="deleteReceipts()">Удалить</button>
         <div class="newReceiptsDoc">
             <div>
                 <p>Номер</p>
-                <input id="nwNumber" type="text" style="height: 20px; margin-left: 10px" />
+                <input id="nwNumber" type="text" style="height: 20px; margin-left: 190px" />
             </div>
             <div>
-                <p>Дата</p>
-                <input id="nwData" type="text" style="height: 20px; margin-left: 24px"/>
+                <p>Дата (Пример: 2025-08-14)</p>
+                <input id="nwData" type="text" style="height: 20px; margin-left: 20px"/>
             </div>
         </div>
         <div class="newCategory">
@@ -65,7 +66,73 @@
     </div>
 
     <script>
-        async function openCategory() {
+        async function addReceipts() {
+            const id = @(Model.Id);
+
+            if (id !== 0) {
+                alert("С айди");
+            }
+            else {
+                const selectNum = document.querySelector("#nwNumber");
+                const selectDate = document.querySelector("#nwData");
+                if (selectNum.value !== "" && selectDate.value !== "") {
+                    const response = await fetch("/api/ReceiptsDoc", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ number: selectNum.value, date: selectDate.value })
+                    })
+                    const result = await response.json();
+                    // const responseReceipts = await fetch()
+            }
+
+            //     if (!response.ok) {
+            //         alert("не получилось");
+            //         return;
+            //     }
+
+            //     window.location.href = '/Receipts/Receipts';
+            // }
+            // else {
+            //     alert("Незаполнены обязательные поля");
+            // }
+        }
+    </script>
+    <script>
+        async function deleteReceipts(){
+            const response = await fetch(`/api/ReceiptsResource/${@Model.Id}`, {
+                method: 'DELETE'
+            });
+            if(!response.ok){
+                alert("Ошибка");
+                return;
+            }
+            window.location.href = '/Receipts/Receipts';
+        }
+    </script>
+    <script>
+        async function getData() {
+            const id = @Model.Id;
+            if(id !== 0){
+                const response = await fetch(`/api/ReceiptsResource/${id}`);
+                const data = await response.json();
+                openCategory();
+                await getItem();
+                data.forEach(item => {
+                    document.querySelector("#nwNumber").value = item.numberRDoc;
+                    document.querySelector("#nwData").value = item.dateRDoc;
+
+                    document.querySelector("#newCategoryResource").value = item.nameResource;
+                    document.querySelector("#newCategoryUnit").value = item.nameUnit;
+                    document.querySelector("#newCount").value = item.countRResource;
+                });
+            }
+        }
+        getData();
+    </script>
+    <script>
+        function openCategory() {
             getItem();
 
             const categoryR = document.querySelector('.categoryR');
@@ -82,7 +149,7 @@
         }
     </script>
     <script>
-        async function closedCategory() {
+        function closedCategory() {
             const categoryR = document.querySelector('.categoryR');
             categoryR.style.visibility = 'hidden';
 
@@ -96,7 +163,6 @@
             btnClosed.style.visibility = 'hidden';
         }
     </script>
-
     <script>
         async function getItem(){
             const responseR = await fetch("/api/Resource");

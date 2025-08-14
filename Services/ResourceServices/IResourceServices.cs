@@ -11,5 +11,6 @@ namespace ApiForTest.Services.ResourceServices
         Task DeleteResources(int id);
         Task<IEnumerable<Resource>> GetArchiveResources();
         Task DoArchiveResources(int id);
+        Task FromArchiveResources(int id);
     }
 }

@@ -11,5 +11,6 @@ namespace ApiForTest.Services.UnitServices
         Task DeleteUnit(int id);
         Task<IEnumerable<Unit>> GetArchiveUnit();
         Task DoArchiveUnit(int id);
+        Task FromArchiveUnit(int id);
     }
 }

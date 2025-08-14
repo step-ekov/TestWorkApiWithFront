@@ -63,5 +63,15 @@ namespace ApiForTest.Services.UnitServices
                 await _skladBd.SaveChangesAsync();
             }
         }
+
+        public async Task FromArchiveUnit(int id)
+        {
+            var archUnity = await _skladBd.UnitDb.FindAsync(id);
+            if (archUnity.State == isArchive)
+            {
+                archUnity.State = false;
+                await _skladBd.SaveChangesAsync();
+            }
+        }
     }
 }

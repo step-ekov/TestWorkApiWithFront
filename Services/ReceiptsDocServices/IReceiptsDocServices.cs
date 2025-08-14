@@ -6,7 +6,7 @@ namespace ApiForTest.Services.ReceiptsDocServices
     {
         Task<IEnumerable<ReceiptsDoc>> GetAllReceiptsDoc();
         Task<ReceiptsDoc?> GetReceiptsDocById(int id);
-        Task PostReceiptsDoc(ReceiptsDoc receiptsDoc);
+        Task<int> PostReceiptsDoc(ReceiptsDoc receiptsDoc);
         Task PutReceiptsDoc(int id, ReceiptsDoc receiptsDoc);
         Task DeleteReceiptsDoc(int id);
     }

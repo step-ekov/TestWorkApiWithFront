@@ -6,9 +6,9 @@
 
         public int ReceiptsResourceID { get; set; }
 
-        public int ResourceID { get; set; }
+        public int? ResourceID { get; set; }
 
-        public int UnitID { get; set; }
+        public int? UnitID { get; set; }
 
         public int Count { get; set; }
     }

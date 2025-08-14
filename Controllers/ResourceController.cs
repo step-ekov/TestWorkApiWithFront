@@ -63,5 +63,12 @@ namespace ApiForTest.Controllers
             await _resourceServices.DoArchiveResources(id);
             return NoContent();
         }
+
+        [HttpPut("fromArchiveResources/{id}")]
+        public async Task<IActionResult> FromArchiveResources(int id)
+        {
+            await _resourceServices.FromArchiveResources(id);
+            return NoContent();
+        }
     }
 }

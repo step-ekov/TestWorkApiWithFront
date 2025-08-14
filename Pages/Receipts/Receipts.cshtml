@@ -85,6 +85,10 @@
                             <td>${item.nameUnit}</td>
                             <td>${item.countRResource}</td>
                 `;
+
+                row.addEventListener('click', () => {
+                    window.location.href = `/Receipts/newReceipts/${item.id}`;
+                });
                 tbody.appendChild(row);
             });
 

@@ -111,16 +111,20 @@ namespace ApiForTest.Services.ReceiptsResourceServices
         {
             var result = from rr in _skladBd.ReceiptsResourcesDb
                          join rd in _skladBd.ReceiptsDocDb on rr.ReceiptsResourceID equals rd.Id
-                         join r in _skladBd.ResourceDb on rr.ResourceID equals r.Id
-                         join u in _skladBd.UnitDb on rr.UnitID equals u.Id
+                         
+                         join r in _skladBd.ResourceDb on rr.ResourceID equals r.Id into rGroup
+                         from r in rGroup.DefaultIfEmpty()
+                         
+                         join u in _skladBd.UnitDb on rr.UnitID equals u.Id into uGroup
+                         from u in uGroup.DefaultIfEmpty()
 
                          select new Result
                          {
                              Id = rr.Id,
                              NumberRDoc = rd.Number,
                              DateRDoc = DateOnly.FromDateTime(rd.Date),
-                             NameResource = r.Name,
-                             NameUnit = u.Name,
+                             NameResource = string.IsNullOrWhiteSpace(r.Name) ? "0" : r.Name,
+                             NameUnit = string.IsNullOrWhiteSpace(u.Name) ? "0" : u.Name,
                              CountRResource = rr.Count
                          };
 

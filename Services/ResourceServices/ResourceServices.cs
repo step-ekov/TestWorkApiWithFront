@@ -64,5 +64,15 @@ namespace ApiForTest.Services.ResourceServices
                 await _skladBd.SaveChangesAsync();
             }
         }
+
+        public async Task FromArchiveResources(int id)
+        {
+            var archResources = await _skladBd.ResourceDb.FindAsync(id);
+            if (archResources.State == isArchive)
+            {
+                archResources.State = false;
+                await _skladBd.SaveChangesAsync();
+            }
+        }
     }
 }

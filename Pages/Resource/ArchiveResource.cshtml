@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Ресурсы</title>
+    <title>Архив ресурсов</title>
     <link rel="stylesheet" href="/css/site.css" />
 </head>
 <body>
@@ -22,7 +22,7 @@
     </div>
 
     <div class="main">
-        <h1 style="color: black;">Справочник ресурсов</h1>
+        <h1 style="color: black;">Архив ресурсов</h1>
         <div>
             <button onclick="window.location.href='/Resource/Resource'">Из архива</button>
         </div>
@@ -40,6 +40,9 @@
     </div>
 
     <script>
+
+    </script>
+    <script>
         async function getData() {
             const response = await fetch("/api/Resource/archive");
             const data = await response.json();
@@ -48,6 +51,10 @@
             data.forEach(item => {
                 const row = document.createElement('tr');
                 row.innerHTML = `<td>${item.name}</td>`;
+
+                row.addEventListener('click', () => {
+                    window.location.href = `/Resource/newResource/${item.id}`;
+                });
                 tbody.appendChild(row);
             });
         }

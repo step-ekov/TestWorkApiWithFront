@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Еденицы измерения</title>
+    <title>Новая ед. измерения</title>
     <link rel="stylesheet" href="/css/site.css" />
 </head>
 <body>
@@ -35,9 +35,22 @@
             <button id="updateBtn" onclick="updateFunc()">Сохранить</button>
             <button id="deleteBtn" onclick="deleteFunc()">Удалить</button>
             <button id="archiveBtn" onclick="archiveFunc()">В архив</button>
+            <button id="fromArchiveBtn" onclick="fromArchiveFunc()">Из архива</button>
         </div>
      </div>
 
+     <script>
+         async function fromArchiveFunc() {
+             const response = await fetch(`/api/unit/fromArchiveUnit/${@Model.Id}`, {
+                 method: 'PUT'
+             });
+             if (!response.ok) {
+                 alert("Ошибка");
+                 return;
+             }
+            window.location.href = '/Unit/Unit';
+         }
+     </script>
     <script>
         async function updateFunc() {
             const result = document.getElementById("nwItem").value;
@@ -73,11 +86,7 @@
     <script>
         async function archiveFunc() {
             const response = await fetch(`/api/unit/archiveUnit/${@Model.Id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ state: true })
+                method: 'PUT'
             });
 
             if (!response.ok) {
@@ -99,8 +108,17 @@
 
                 const response = await fetch(`/api/Unit/${Id}`);
                 const data = await response.json();
-                const selector = document.querySelector("#nwItem");
-                selector.value = data.name;
+
+                if (data.state === false) {
+                    const selectFromArchive = document.querySelector("#fromArchiveBtn");
+                    selectFromArchive.style.display = 'none';
+                }
+                else{
+                    const selectArchiveBtn = document.querySelector("#archiveBtn");
+                    selectArchiveBtn.style.display = 'none';
+                }
+                const select = document.querySelector("#nwItem");
+                select.value = data.name;
             }
             else {
                 const selectUpdateBtn = document.querySelector("#updateBtn");

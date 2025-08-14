@@ -5,8 +5,11 @@ namespace ApiForTest.Pages.Receipts
 {
     public class newReceiptsModel : PageModel
     {
-        public void OnGet()
+        public int Id { get; set; }
+
+        public void OnGet(int id)
         {
+            Id = id;
         }
     }
 }

@@ -64,5 +64,12 @@ namespace ApiForTest.Controllers
             await _unitServices.DoArchiveUnit(id);
             return NoContent();
         }
+
+        [HttpPut("fromArchiveUnit/{id}")]
+        public async Task<IActionResult> FromArchiveUnit(int id)
+        {
+            await _unitServices.FromArchiveUnit(id);
+            return NoContent();
+        }
     }
 }
