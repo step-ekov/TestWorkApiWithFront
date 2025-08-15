@@ -18,18 +18,23 @@ namespace ApiForTest.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Unit>>> GetAll()
+        public async Task<ActionResult<IEnumerable<ReceiptsResource>>> GetAll()
         {
             var result = await _receiptsResourceServices.GetAllReceiptRes();
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Unit?>> GetById(int id)
+        public async Task<ActionResult<ReceiptsResource?>> GetById(int id)
         {
             var r = await _receiptsResourceServices.GetReceiptResById(id);
             return Ok(r);
-            //return Ok(await _receiptsResourceServices.GetReceiptResById(id));
+        }
+
+        [HttpGet("GetID/{id}")]
+        public async Task<ActionResult<ReceiptsResource?>> GetID(int id)
+        {
+            return Ok(await _receiptsResourceServices.GetIDReceiptResById(id));
         }
 
         [HttpPost]

@@ -67,10 +67,37 @@
 
     <script>
         async function addReceipts() {
-            const id = @(Model.Id);
+            const id = @Model.Id;
 
             if (id !== 0) {
-                alert("С айди");
+                const itemResource = document.getElementById('newCategoryResource').value.trim();
+                const responseResource = await fetch("/api/Resource");
+                const dataResource = await responseResource.json();
+                const needItemR = Array.from(dataResource).find(r => r.name === itemResource) || { id: 0 };
+                
+                const itemUnit = document.getElementById('newCategoryUnit').value.trim();
+                const responseUnit = await fetch("/api/Unit");
+                const dataUnit = await responseUnit.json();
+                const needItemU = Array.from(dataUnit).find(u => u.name === itemUnit) || { id: 0 };
+
+                const itemCount = document.getElementById('newCount').value.trim();
+                
+                const responseGetData = await fetch(`/api/ReceiptsResource/GetID/${id}`);
+                const getData = await responseGetData.json();
+                const response = await fetch(`/api/ReceiptsResource/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ receiptsResourceID: getData.receiptsResourceID,
+                        resourceID: needItemR.id, unitID: needItemU.id, count: itemCount
+                    })
+                });
+                if (!response.ok) {
+                    alert("Что то не так");
+                    return;
+                }
+                window.location.href = '/Receipts/Receipts';
             }
             else {
                 const selectNum = document.querySelector("#nwNumber");
@@ -83,20 +110,26 @@
                         },
                         body: JSON.stringify({ number: selectNum.value, date: selectDate.value })
                     })
+
                     const result = await response.json();
-                    // const responseReceipts = await fetch()
+                    const dopResponse = await fetch("/api/ReceiptsResource", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ receiptsResourceID: result.id, count: 0 })
+                    });
+
+                    if (!response.ok || !dopResponse.ok) {
+                        alert("не получилось");
+                        return;
+                    }
+                    window.location.href = '/Receipts/Receipts';
+                }
+                else {
+                    alert("Незаполнены обязательные поля");
+                }
             }
-
-            //     if (!response.ok) {
-            //         alert("не получилось");
-            //         return;
-            //     }
-
-            //     window.location.href = '/Receipts/Receipts';
-            // }
-            // else {
-            //     alert("Незаполнены обязательные поля");
-            // }
         }
     </script>
     <script>
@@ -127,6 +160,9 @@
                     document.querySelector("#newCategoryUnit").value = item.nameUnit;
                     document.querySelector("#newCount").value = item.countRResource;
                 });
+            }
+            else{
+                document.querySelector('#deleteBtn').style.display = 'none';
             }
         }
         getData();

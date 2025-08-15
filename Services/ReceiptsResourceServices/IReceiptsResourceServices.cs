@@ -7,6 +7,7 @@ namespace ApiForTest.Services.ReceiptsResourceServices
     {
         Task<IEnumerable<Result>> GetAllReceiptRes();
         Task<IEnumerable<Result?>> GetReceiptResById(int id);
+        Task<ReceiptsResource?> GetIDReceiptResById(int id);
         Task PostReceiptRes(ReceiptsResource receiptsResource);
         Task PutReceiptRes(int id, ReceiptsResource receiptsDoc);
         Task DeleteReceiptRes(int id);

@@ -30,6 +30,11 @@ namespace ApiForTest.Services.ReceiptsResourceServices
                 .ToListAsync();
         }
 
+        public async Task<ReceiptsResource?> GetIDReceiptResById(int id)
+        {
+            return await _skladBd.ReceiptsResourcesDb.FirstOrDefaultAsync(r => r.Id == id);
+        }
+
         public async Task PostReceiptRes(ReceiptsResource receiptsResource)
         {
             await _skladBd.ReceiptsResourcesDb.AddAsync(receiptsResource);
