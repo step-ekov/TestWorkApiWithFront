@@ -102,16 +102,26 @@ button {
     }
 
     .allFilter select {
-        width: 295px;
+        width: 170px;
         height: 25px;
     }
 
-/*AddItems Page*/
-.newItem {
-    display: flex;
-    width: 350px;
-    gap: 5px;
-}
+    .allFilter input{
+        margin: 5px;
+        height: 25px;
+        width: 150px;
+    }
+
+    #MainTb{
+        width: 1320px;
+    }
+
+    /*AddItems Page*/
+    .newItem {
+        display: flex;
+        width: 350px;
+        gap: 5px;
+    }
 
 .newItem button{
     width: 105px;

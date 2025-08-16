@@ -27,6 +27,13 @@
         <h1 style="color: black;">Поступления</h1>
 
         <div class="allFilter">
+
+            <div class="dateFilter">
+                <labal for="category" style="font-size: 16px; color: black">Период</labal>
+                <input id="startDateFilter" type="date"/>
+                <input id="endDateFilter" type="date"/>
+            </div>
+
             <div class="filterReceipts">
                 <label for="category" style="font-size: 16px;">Номер поступления</label>
                 <select id="categoryNumber" name="category">
@@ -133,10 +140,15 @@
 
     <script>
         async function clickFilter() {
+            const startDate = document.querySelector("#startDateFilter").value;
+            const endDate = document.querySelector("#endDateFilter").value;
             const selectorNumber = document.querySelector("#categoryNumber").value;
             const selectorResource = document.querySelector("#categoryResource").value;
             const selectorUnit = document.querySelector("#categoryUnit").value;
 
+            if (startDate !== "" && endDate !== "") {
+                getData(api = `/api/ReceiptsResource/filterDate?startDate=${startDate}&endDate=${endDate}`);
+            }
             if (selectorNumber !== "Все") {
                 getData(api = `/api/ReceiptsResource/filterNumberReceipts?receiptsDocId=${selectorNumber}`);
             }

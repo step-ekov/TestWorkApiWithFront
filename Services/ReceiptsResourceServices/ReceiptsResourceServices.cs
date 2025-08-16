@@ -73,10 +73,12 @@ namespace ApiForTest.Services.ReceiptsResourceServices
             }
         }
 
-        //public async Task<IEnumerable<Result>> FilterDate(ReceiptsDoc receiptsDoc)
-        //{
-
-        //}
+        public async Task<IEnumerable<Result>> FilterDate(DateOnly startDate, DateOnly endDate)
+        {
+            return await GetReceipt()
+                .Where(r => r.DateRDoc >= startDate && r.DateRDoc <= endDate)
+                .ToListAsync();
+        }
 
         public async Task<IEnumerable<Result>> FilterReceipts(int receiptsDocId)
         {

@@ -13,7 +13,7 @@ namespace ApiForTest.Services.ReceiptsResourceServices
         Task DeleteReceiptRes(int id);
 
 
-        //Task<IEnumerable<Result>> FilterDate(ReceiptsDoc receiptsDoc);
+        Task<IEnumerable<Result>> FilterDate(DateOnly startDate, DateOnly endDate);
         Task<IEnumerable<Result>> FilterReceipts(int receiptsDocId);
         Task<IEnumerable<Result>> FilterResource(string resourceName);
         Task<IEnumerable<Result>> FilterUnit(string unitName);

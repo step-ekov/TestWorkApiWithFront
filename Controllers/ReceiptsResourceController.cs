@@ -51,6 +51,13 @@ namespace ApiForTest.Controllers
             return NoContent();
         }
 
+        [HttpGet("filterDate")]
+        public async Task<ActionResult<IEnumerable<Result>>> FilterDate(DateOnly startDate, DateOnly endDate)
+        {
+            var result = await _receiptsResourceServices.FilterDate(startDate, endDate);
+            return Ok(result);
+        }
+
         [HttpGet("filterNumberReceipts")]
         public async Task<ActionResult<IEnumerable<Result>>> FilterReceipts(int receiptsDocId)
         {
