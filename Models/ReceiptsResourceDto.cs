@@ -1,10 +1,10 @@
 ﻿namespace ApiForTest.Models
 {
-    public class ReceiptsResource
+    public class ReceiptsResourceDto
     {
         public int Id { get; set; }
 
-        public int ReceiptsDocId { get; set; } //ReceiptsResourceID
+        public int ReceiptsDocId { get; set; }
 
         public int? ResourceID { get; set; }
 

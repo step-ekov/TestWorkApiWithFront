@@ -45,7 +45,7 @@ namespace ApiForTest.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, ReceiptsResource receiptsDoc)
+        public async Task<IActionResult> Update(int id, List<ReceiptsResource> receiptsDoc)
         {
             await _receiptsResourceServices.PutReceiptRes(id, receiptsDoc);
             return NoContent();

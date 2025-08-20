@@ -63,41 +63,104 @@
                 <button id="deleteCategory" onclick="closedCategory()">-</button>
             </div>
         </div>
-    </div>
+        <div class="table">
+            <table id="table">
+                <thead>
+                    <tr>
+                        <th style="width: 30px;"><button id="addItems" onclick="add()" style="width: 30px; height: 30px;">+</button></th>
+                        <th style="width: 400px;">Ресурс</th>
+                        <th style="width: 400px;">Еденица измерения</th>
+                        <th style="width: 400px;">Количество</th>
+                    </tr>
+                </thead>
+                <tbody>
 
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        function del (button){
+            const row = button.closest("tr");
+            row.remove();
+        }
+        function add(){
+            console.log("add");
+            getItem();
+            const tbody = document.querySelector("#table tbody");
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="width: 30px;"><button id="deleteNew" onclick="del(this)" style="width: 30px; height: 30px;">x</button></td>
+                <td><select class="nwResource"><option value="Все">Все</option></select></td>
+                <td><select class="nwUnit"><option value="Все">Все</option></select></td>
+                <td><input class="nwCount" value="0"/></td>
+            `;
+            tbody.appendChild(tr);
+        }
+    </script>
     <script>
         async function addReceipts() {
+            console.log("Добавление");
             const id = @Model.Id;
 
             if (id !== 0) {
-                const itemResource = document.getElementById('newCategoryResource').value.trim();
+                //                                              Ресурсы
+                const itemResource = document.querySelectorAll('.nwResource');
                 const responseResource = await fetch("/api/Resource");
                 const dataResource = await responseResource.json();
-                const needItemR = Array.from(dataResource).find(r => r.name === itemResource) || { id: 0 };
-                
-                const itemUnit = document.getElementById('newCategoryUnit').value.trim();
+
+                const needItemR = Array.from(itemResource).map(item => {
+                    const resource = dataResource.find(r => r.name === item.value) || { id: 0 };
+                    return resource;
+                });
+
+                //                                              Юниты
+                const itemUnit = document.querySelectorAll('.nwUnit');
                 const responseUnit = await fetch("/api/Unit");
                 const dataUnit = await responseUnit.json();
-                const needItemU = Array.from(dataUnit).find(u => u.name === itemUnit) || { id: 0 };
 
-                const itemCount = document.getElementById('newCount').value.trim();
-                
+                const needItemU = Array.from(itemUnit).map(item => {
+                    const unit = dataUnit.find(u => u.name === item.value) || { id: 0 };
+                    return unit;
+                });
+
+                //                                              Количество
+                const itemCount = document.querySelectorAll('.nwCount');
+                const count = Array.from(itemCount).map(item => {
+                    return item.value;
+                });
+
                 const responseGetData = await fetch(`/api/ReceiptsResource/GetID/${id}`);
                 const getData = await responseGetData.json();
+               
+                //                                              Сборка
+                const resultRequest = needItemR.map((itemR, index) => {
+                    const id = getData.id;
+                    const docID = getData.receiptsDocId;
+                    const itemU = needItemU[index];
+                    const itemC = count[index];
+
+                    return {
+                        id: id,
+                        receiptsDocId: docID,
+                        resourceID: itemR.id,
+                        unitID: itemU.id,
+                        count: itemC
+                    };
+                });
+
                 const response = await fetch(`/api/ReceiptsResource/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ receiptsResourceID: getData.receiptsResourceID,
-                        resourceID: needItemR.id, unitID: needItemU.id, count: itemCount
-                    })
+                    body: JSON.stringify(resultRequest)
                 });
                 if (!response.ok) {
                     alert("Что то не так");
                     return;
                 }
-                window.location.href = '/Receipts/Receipts';
+                //window.location.href = '/Receipts/Receipts';
             }
             else {
                 const selectNum = document.querySelector("#nwNumber");
@@ -117,7 +180,7 @@
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ receiptsResourceID: result.id, count: 0 })
+                        body: JSON.stringify({ ReceiptsDocId: result.id, count: 0 })
                     });
 
                     if (!response.ok || !dopResponse.ok) {
@@ -146,19 +209,20 @@
     </script>
     <script>
         async function getData() {
+            console.log("getData");
             const id = @Model.Id;
             if(id !== 0){
                 const response = await fetch(`/api/ReceiptsResource/${id}`);
                 const data = await response.json();
-                openCategory();
+                add();
                 await getItem();
                 data.forEach(item => {
                     document.querySelector("#nwNumber").value = item.numberRDoc;
                     document.querySelector("#nwData").value = item.dateRDoc;
 
-                    document.querySelector("#newCategoryResource").value = item.nameResource;
-                    document.querySelector("#newCategoryUnit").value = item.nameUnit;
-                    document.querySelector("#newCount").value = item.countRResource;
+                    document.querySelector(".nwResource").value = item.nameResource;
+                    document.querySelector(".nwUnit").value = item.nameUnit;
+                    document.querySelector(".nwCount").value = item.countRResource;
                 });
             }
             else{
@@ -201,33 +265,39 @@
     </script>
     <script>
         async function getItem(){
+            console.log("getItem");
             const responseR = await fetch("/api/Resource");
             const dataR = await responseR.json();
-            const selectorR = document.querySelector("#newCategoryResource");
-            
-            dataR.forEach(itemR => {
-                resource = Array.from(selectorR.options)
-                    .some(option => option.textContent === itemR.name);
+            const selectorsR = document.querySelectorAll(".nwResource");
 
-                if (!resource) {
-                    const rowR = document.createElement('option');
-                    rowR.textContent = itemR.name;
-                    selectorR.appendChild(rowR);
-                }
+            selectorsR.forEach(selectorR => {
+                dataR.forEach(itemR => {
+                    resource = Array.from(selectorR.options)
+                        .some(option => option.textContent === itemR.name);
+
+                    if (!resource) {
+                        const rowR = document.createElement('option');
+                        rowR.textContent = itemR.name;
+                        selectorR.appendChild(rowR);
+                    }
+                });
             });
 
             const responseU = await fetch("/api/Unit");
             const dataU = await responseU.json();
-            const selectorU = document.querySelector("#newCategoryUnit");
-            dataU.forEach(itemU => {
-                const unit = Array.from(selectorU.options)
-                    .some(option => option.textContent === itemU.name);
+            const selectorsU = document.querySelectorAll(".nwUnit");
 
-                if (!unit) {
-                    const rowU = document.createElement('option');
-                    rowU.textContent = itemU.name;
-                    selectorU.appendChild(rowU);
-                }
+            selectorsU.forEach(selectorU => {
+                dataU.forEach(itemU => {
+                    const unit = Array.from(selectorU.options)
+                        .some(option => option.textContent === itemU.name);
+
+                    if (!unit) {
+                        const rowU = document.createElement('option');
+                        rowU.textContent = itemU.name;
+                        selectorU.appendChild(rowU);
+                    }
+                });
             });
         }
     </script>

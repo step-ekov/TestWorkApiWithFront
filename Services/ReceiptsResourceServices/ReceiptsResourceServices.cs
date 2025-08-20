@@ -41,26 +41,33 @@ namespace ApiForTest.Services.ReceiptsResourceServices
             await _skladBd.SaveChangesAsync();
         }
 
-        public async Task PutReceiptRes(int id, ReceiptsResource receiptsDoc)
+        public async Task PutReceiptRes(int id, List<ReceiptsResource> receiptsResources)
         {
-            var receipt = await _skladBd.ReceiptsResourcesDb.FirstOrDefaultAsync(r => r.Id == id);
-
-            if (receipt != null)
+            foreach (var receiptsDoc in receiptsResources)
             {
-                if(receipt.ReceiptsResourceID != receiptsDoc.ReceiptsResourceID && receiptsDoc.ReceiptsResourceID != 0)
-                    receipt.ReceiptsResourceID = receiptsDoc.ReceiptsResourceID;
-                
-                if(receipt.ResourceID != receiptsDoc.ResourceID && receiptsDoc.ResourceID != 0)
-                    receipt.ResourceID = receiptsDoc.ResourceID;
-                
-                if(receipt.UnitID != receiptsDoc.UnitID && receiptsDoc.UnitID != 0)
-                    receipt.UnitID = receiptsDoc.UnitID;
-                
-                if(receipt.Count != receiptsDoc.Count && receiptsDoc.Count != 0)
-                    receipt.Count = receiptsDoc.Count;
-                
-                await _skladBd.SaveChangesAsync();
+                //var receipt = await _skladBd.ReceiptsResourcesDb.FirstOrDefaultAsync(r => r.Id == id);
+                var receipt = await _skladBd.ReceiptsResourcesDb.FirstOrDefaultAsync(r => r.ReceiptsDocId == receiptsDoc.ReceiptsDocId);
+
+                if (receipt != null)
+                {
+                    if(receipt.ReceiptsDocId == receiptsDoc.ReceiptsDocId)
+                    {
+
+                    }
+                    if (receipt.ReceiptsDocId != receiptsDoc.ReceiptsDocId)
+                        receipt.ReceiptsDocId = receiptsDoc.ReceiptsDocId;
+
+                    if (receipt.ResourceID != receiptsDoc.ResourceID && receiptsDoc.ResourceID != 0)
+                        receipt.ResourceID = receiptsDoc.ResourceID;
+
+                    if (receipt.UnitID != receiptsDoc.UnitID && receiptsDoc.UnitID != 0)
+                        receipt.UnitID = receiptsDoc.UnitID;
+
+                    if (receipt.Count != receiptsDoc.Count && receiptsDoc.Count != 0)
+                        receipt.Count = receiptsDoc.Count;
+                }
             }
+            await _skladBd.SaveChangesAsync();
         }
 
         public async Task DeleteReceiptRes(int id)
@@ -117,7 +124,7 @@ namespace ApiForTest.Services.ReceiptsResourceServices
         private IQueryable<Result> GetReceipt()
         {
             var result = from rr in _skladBd.ReceiptsResourcesDb
-                         join rd in _skladBd.ReceiptsDocDb on rr.ReceiptsResourceID equals rd.Id
+                         join rd in _skladBd.ReceiptsDocDb on rr.ReceiptsDocId equals rd.Id
                          
                          join r in _skladBd.ResourceDb on rr.ResourceID equals r.Id into rGroup
                          from r in rGroup.DefaultIfEmpty()
